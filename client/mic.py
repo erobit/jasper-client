@@ -8,7 +8,7 @@ from wave import open as open_audio
 import audioop
 import pyaudio
 import alteration
-
+from settings import commands
 
 # quirky bug where first import doesn't work
 try:
@@ -222,7 +222,7 @@ class Mic:
         """
 
         AUDIO_FILE = "active.wav"
-        RATE = 16000
+        RATE = 48000
         CHUNK = 1024
         LISTEN_TIME = 12
 
@@ -237,7 +237,7 @@ class Mic:
         if THRESHOLD == None:
             THRESHOLD = self.fetchThreshold()
 
-        os.system("aplay -D hw:1,0 beep_hi.wav")
+	self.play("beep_hi.wav")
 
         # prepare recording stream
         audio = pyaudio.PyAudio()
@@ -267,7 +267,7 @@ class Mic:
             if average < THRESHOLD * 0.8:
                 break
 
-        os.system("aplay -D hw:1,0 beep_lo.wav")
+	self.play("beep_lo.wav")
 
         # save the audio data
         stream.stop_stream()
@@ -293,4 +293,7 @@ class Mic:
         phrase = alteration.clean(phrase)
 
         os.system("espeak " + json.dumps(phrase) + OPTIONS)
-        os.system("aplay -D hw:1,0 say.wav")
+	self.play("say.wav")
+
+    def play(self, file):
+        os.system(commands["play"] % file);

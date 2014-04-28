@@ -1,7 +1,7 @@
 import yaml
 import sys
 from conversation import Conversation
-
+from settings import persona
 
 def isLocal():
     return len(sys.argv) > 1 and sys.argv[1] == "--local"
@@ -25,6 +25,6 @@ if __name__ == "__main__":
 
     mic.say("How can I be of service?")
 
-    conversation = Conversation("JASPER", mic, profile)
+    conversation = Conversation(persona, mic, profile)
 
     conversation.handleForever()
